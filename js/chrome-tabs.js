@@ -326,6 +326,19 @@
         })
 
         draggabilly.on('dragMove', (event, pointer, moveVector) => {
+
+          //console.log('chrome-tabs::dragMove', moveVector.x, moveVector.y);
+          const MoveBound = 30;
+          if(moveVector.y < -MoveBound || moveVector.y > MoveBound) {
+            const detached = tabEl.getAttribute('data-detached');
+            if(!detached) {
+              console.log('in Detaching tab', pointer);
+              tabEl.setAttribute('data-detached', "true");
+              this.emit('tabDetach', { tabEl, pointer })
+            }
+            return;
+          }
+
           // Current index be computed within the event since it can change during the dragMove
           const tabEls = this.tabEls
           const currentIndex = tabEls.indexOf(tabEl)
